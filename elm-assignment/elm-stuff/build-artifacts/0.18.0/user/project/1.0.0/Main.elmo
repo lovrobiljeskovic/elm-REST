@@ -1,0 +1,120 @@
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Main$counterDecoder = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'counter',
+		_1: {ctor: '[]'}
+	},
+	_elm_lang$core$Json_Decode$int);
+var _user$project$Main$Model = function (a) {
+	return {counter: a};
+};
+var _user$project$Main$initialModel = _user$project$Main$Model(0);
+var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Main$ResetCount = function (a) {
+	return {ctor: 'ResetCount', _0: a};
+};
+var _user$project$Main$resetCount = function () {
+	var url = 'http://localhost:5050/counter/1';
+	var request = A3(_elm_lang$http$Http$post, url, _elm_lang$http$Http$emptyBody, _elm_lang$core$Json_Decode$int);
+	return A2(_elm_lang$http$Http$send, _user$project$Main$ResetCount, request);
+}();
+var _user$project$Main$FetchCount = function (a) {
+	return {ctor: 'FetchCount', _0: a};
+};
+var _user$project$Main$fetchCount = function () {
+	var url = 'http://localhost:5050/counter';
+	var request = A2(_elm_lang$http$Http$get, url, _user$project$Main$counterDecoder);
+	return A2(_elm_lang$http$Http$send, _user$project$Main$FetchCount, request);
+}();
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'Get':
+				return {ctor: '_Tuple2', _0: model, _1: _user$project$Main$fetchCount};
+			case 'Set':
+				return {ctor: '_Tuple2', _0: model, _1: _user$project$Main$resetCount};
+			case 'ResetCount':
+				var _p1 = A2(_elm_lang$core$Debug$log, 'result', _p0._0);
+				if (_p1.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{counter: 1}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			default:
+				var _p2 = A2(_elm_lang$core$Debug$log, 'result', _p0._0);
+				if (_p2.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{counter: _p2._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+		}
+	});
+var _user$project$Main$Set = {ctor: 'Set'};
+var _user$project$Main$Get = {ctor: 'Get'};
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Get),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Get'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$Set),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Set'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$h2,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(model.counter)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
